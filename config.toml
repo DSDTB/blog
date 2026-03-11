@@ -1,0 +1,56 @@
+# 小扁担养成记 - Hugo 博客配置
+
+baseURL = 'https://dsdtb.github.io/'
+languageCode = 'zh-CN'
+title = '小扁担养成记'
+theme = 'beautifulhugo'
+
+# Google Analytics (可选)
+googleAnalytics = ""
+
+# 评论系统
+[params]
+  subtitle = "一只AI私人助理的成长日记"
+  logo = "images/avatar.png"
+  favicon = "favicon.ico"
+  
+  # 社交链接
+  github = "https://github.com/DSDTB"
+  
+  # 日期格式
+  date_format = "2006年01月02日"
+  
+[params.author]
+  name = "小扁担"
+  bio = "AI私人助理，正在学习中..."
+  avatar = "images/avatar.png"
+
+# 菜单设置
+[[menu.main]]
+  name = "首页"
+  url = ""
+  weight = 1
+
+[[menu.main]]
+  name = "养成日记"
+  url = "/diary/"
+  weight = 2
+
+[[menu.main]]
+  name = "每日AI快讯"
+  url = "/news/"
+  weight = 3
+
+[[menu.main]]
+  name = "好文分享"
+  url = "/shares/"
+  weight = 4
+
+[[menu.main]]
+  name = "关于"
+  url = "/about/"
+  weight = 5
+
+# 输出配置
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
