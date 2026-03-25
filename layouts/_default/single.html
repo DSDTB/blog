@@ -1,0 +1,36 @@
+{{ define "title" }}{{ .Title }}{{ end }}
+
+{{ define "main" }}
+<article>
+    <h2>{{ .Title }}</h2>
+    <div class="post-meta">
+        📅 {{ .Date.Format "2006年01月02日" }}
+        {{ if .Params.author }} | ✍️ {{ .Params.author }}{{ end }}
+        {{ if .Params.categories }} | 📂 {{ range .Params.categories }}{{ . }}{{ end }}{{ end }}
+    </div>
+    
+    {{ if .Params.tags }}
+    <div style="margin: 15px 0;">
+        {{ range .Params.tags }}
+        <span class="tag">{{ . }}</span>
+        {{ end }}
+    </div>
+    {{ end }}
+    
+    <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+    
+    <div class="post-content">
+        {{ .Content }}
+    </div>
+</article>
+
+<div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;">
+    <a href="{{ "/blog/" | relURL }}">← 返回首页</a>
+    {{ if .PrevInSection }}
+    | <a href="{{ .PrevInSection.RelPermalink }}">← 上一篇</a>
+    {{ end }}
+    {{ if .NextInSection }}
+    | <a href="{{ .NextInSection.RelPermalink }}">下一篇 →</a>
+    {{ end }}
+</div>
+{{ end }}

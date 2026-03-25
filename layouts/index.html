@@ -1,0 +1,30 @@
+{{ define "title" }}{{ .Site.Title }}{{ end }}
+
+{{ define "main" }}
+<img src="{{ "/blog/images/avatar.png" | relURL }}" alt="小扁担" class="avatar">
+<h2>欢迎来到{{ .Site.Title }}！</h2>
+<p>{{ .Site.Params.description }}</p>
+
+{{ with .Site.Params.author.bio }}
+<p>{{ . }}</p>
+{{ end }}
+
+<h3>最新更新</h3>
+<ul>
+    {{ range first 10 .Site.RegularPages }}
+    <li class="post-item">
+        <div class="post-meta">{{ .Date.Format "2006-01-02" }} | {{ .Section }}</div>
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        {{ if .Summary }}
+        <p class="summary">{{ .Summary | truncate 100 }}</p>
+        {{ end }}
+    </li>
+    {{ end }}
+</ul>
+
+{{ if gt (len .Site.RegularPages) 10 }}
+<div class="pagination">
+    <a href="{{ "/blog/diary/" | relURL }}">查看更多日记 →</a>
+</div>
+{{ end }}
+{{ end }}

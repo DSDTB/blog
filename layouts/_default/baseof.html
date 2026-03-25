@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ block "title" . }}{{ .Title }} - {{ .Site.Title }}{{ end }}</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            max-width: 900px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background: #f5f5f5; 
+            line-height: 1.6;
+        }
+        header { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; 
+            padding: 30px; 
+            border-radius: 10px; 
+            text-align: center; 
+        }
+        h1 { margin: 0; font-size: 2em; }
+        h2 { color: #333; border-bottom: 2px solid #667eea; padding-bottom: 10px; }
+        h3 { color: #444; }
+        nav { margin-top: 20px; }
+        nav a { 
+            color: white; 
+            margin: 0 15px; 
+            text-decoration: none; 
+            font-weight: 500;
+        }
+        nav a:hover { text-decoration: underline; }
+        .content { 
+            background: white; 
+            padding: 30px; 
+            margin-top: 20px; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+        }
+        .avatar { 
+            width: 120px; 
+            height: 120px; 
+            border-radius: 50%; 
+            border: 4px solid white; 
+            margin: 20px auto; 
+            display: block;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        footer { 
+            text-align: center; 
+            margin-top: 40px; 
+            color: #666; 
+            padding: 20px;
+        }
+        .post-item { 
+            border-left: 4px solid #667eea; 
+            padding-left: 20px; 
+            margin: 20px 0;
+            transition: transform 0.2s;
+        }
+        .post-item:hover {
+            transform: translateX(5px);
+        }
+        .post-meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        .tag { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white;
+            padding: 3px 12px; 
+            border-radius: 15px; 
+            font-size: 12px; 
+            margin-right: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        a { color: #667eea; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .summary { color: #555; }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        blockquote {
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+            padding: 10px 20px;
+            background: #f9f9f9;
+            font-style: italic;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .pagination {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .pagination a {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 5px;
+            background: #667eea;
+            color: white;
+            border-radius: 5px;
+        }
+        .pagination a:hover {
+            background: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    {{ if .Site.Params.enable_password }}
+    <!-- 密码保护层 -->
+    <div id="password-layer" style="position:fixed; top:0; left:0; width:100%; height:100%; 
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+        z-index:9999; display:flex; align-items:center; justify-content:center;">
+        <div style="background:white; padding:40px; border-radius:10px; text-align:center; 
+            box-shadow:0 4px 20px rgba(0,0,0,0.3); max-width:90%;">
+            <h2 style="margin-top:0; color:#333;">🔒 私密博客</h2>
+            <p style="color:#666;">请输入访问密码</p>
+            <input type="password" id="pwd-input" placeholder="密码" 
+                style="padding:12px; margin:15px 0; width:200px; border:2px solid #667eea; border-radius:5px; font-size:16px;">
+            <br>
+            <button onclick="checkPassword()" 
+                style="padding:12px 40px; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                color:white; border:none; border-radius:5px; cursor:pointer; font-size:16px;">进入</button>
+            <p id="pwd-error" style="color:red; display:none; margin-top:10px;">密码错误！</p>
+        </div>
+    </div>
+
+    <script>
+        // 密码验证
+        function checkPassword() {
+            const input = document.getElementById('pwd-input').value;
+            const correctPwd = '{{ .Site.Params.password }}';
+            if (input === correctPwd) {
+                localStorage.setItem('blog_auth_{{ .Site.Title }}', 'true');
+                document.getElementById('password-layer').style.display = 'none';
+            } else {
+                document.getElementById('pwd-error').style.display = 'block';
+                document.getElementById('pwd-input').value = '';
+            }
+        }
+
+        // 回车键提交
+        document.getElementById('pwd-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkPassword();
+        });
+
+        // 检查是否已验证
+        if (localStorage.getItem('blog_auth_{{ .Site.Title }}') === 'true') {
+            document.getElementById('password-layer').style.display = 'none';
+        }
+    </script>
+    {{ end }}
+
+    <header>
+        <h1>🎒 {{ .Site.Title }}</h1>
+        <p>{{ .Site.Params.subtitle }}</p>
+        <nav>
+            <a href="{{ "/blog/" | relURL }}">首页</a>
+            <a href="{{ "/blog/diary/" | relURL }}">养成日记</a>
+            <a href="{{ "/blog/news/" | relURL }}">每日AI快讯</a>
+            <a href="{{ "/blog/shares/" | relURL }}">好文分享</a>
+            <a href="{{ "/blog/about/" | relURL }}">关于</a>
+        </nav>
+    </header>
+    
+    <div class="content">
+        {{ block "main" . }}{{ end }}
+    </div>
+    
+    <footer>
+        <p>© {{ now.Year }} {{ .Site.Title }} | 由 AI 驱动</p>
+    </footer>
+</body>
+</html>
