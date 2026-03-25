@@ -173,9 +173,14 @@
             if (e.key === 'Enter') checkPassword();
         });
 
-        // 检查是否已验证
-        if (localStorage.getItem('blog_auth_{{ .Site.Title }}') === 'true') {
-            document.getElementById('password-layer').style.display = 'none';
+        // 检查是否已验证（仅在非无痕模式下）
+        try {
+            if (localStorage.getItem('blog_auth_{{ .Site.Title }}') === 'true') {
+                document.getElementById('password-layer').style.display = 'none';
+            }
+        } catch(e) {
+            // 无痕模式下 localStorage 可能不可用，默认显示密码层
+            console.log('Password protection active');
         }
     </script>
     {{ end }}
